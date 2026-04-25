@@ -395,19 +395,18 @@
 
   async function loadEntries() {
     try {
-      const id = await getBinId() || BIN_ID;
-      const res = await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`, {
-        headers: { 'X-Master-Key': MASTER_KEY }
+      const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+        headers: { 'X-Master-Key': MASTER_KEY, 'X-Bin-Meta': 'false' }
       });
       const data = await res.json();
-      entries = data.record.entries || [];
+      entries = data.entries || [];
       renderList();
+      if (revealed) populateWinnerSelect();
     } catch(e) { console.error(e); }
   }
 
   async function saveEntries() {
-    const id = BIN_ID;
-    await fetch(`https://api.jsonbin.io/v3/b/${id}`, {
+    await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -509,6 +508,8 @@
 
   // Init on load
   initBin();
+  // Auto-refresh every 8 seconds
+  setInterval(loadEntries, 8000);
 </script>
 </body>
 </html>

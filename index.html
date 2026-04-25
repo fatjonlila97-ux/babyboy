@@ -381,39 +381,16 @@
 <script>
   const ADMIN_PASSWORD = "admin123";
   const MASTER_KEY = "$2a$10$e5tzvVVp0acvCgvEprqp5uobWUazIP7Gidu6JRKV5lNC1pa/tiMEW";
-  let BIN_ID = null;
+  const BIN_ID = "69ec1afd36566621a8ebf3e4";
   let entries = [];
   let revealed = false;
 
   async function getBinId() {
-    if (BIN_ID) return BIN_ID;
-    try {
-      const res = await fetch('https://api.jsonbin.io/v3/b', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Master-Key': MASTER_KEY,
-          'X-Bin-Name': 'baby-boy-names',
-          'X-Bin-Private': 'false'
-        },
-        body: JSON.stringify({ entries: [] })
-      });
-      const data = await res.json();
-      BIN_ID = data.metadata.id;
-      localStorage.setItem('babyBoyBinId', BIN_ID);
-      return BIN_ID;
-    } catch(e) { console.error(e); }
+    return BIN_ID;
   }
 
   async function initBin() {
-    const saved = localStorage.getItem('babyBoyBinId');
-    if (saved) {
-      BIN_ID = saved;
-      await loadEntries();
-    } else {
-      await getBinId();
-      await loadEntries();
-    }
+    await loadEntries();
   }
 
   async function loadEntries() {
